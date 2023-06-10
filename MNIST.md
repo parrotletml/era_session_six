@@ -96,7 +96,7 @@ But before we jump into network architecture we like to point out some of the go
 
 We will now spare you too much of `GYAN` and quickly jump on to the network design used.
 
-![network](./assets/network.png)
+<!-- ![network](./assets/network.png) -->
 
 This network contains a block pattern as shown. We start with an image of size 1\*28\*28
 
@@ -104,9 +104,9 @@ This network contains a block pattern as shown. We start with an image of size 1
 2. Transition layer -> Here we have used MaxPolling2D to reduce channel size by half, followed by a dropout of 0.01
 3. Block 2 -> Convolution with a kernel of size 8\*3\*3 and padding 1, we do two sets of such convolution
 4. Transition layer -> Here we have used MaxPolling2D to reduce channel size by half, followed by a dropout of 0.01
-5. Block 2 -> Convolution with a kernel of size 16\*3\*3 and padding 1, we do two sets of such convolution
-6. Transition layer -> A 1\*1 convolution is used to reduce the channel from 16 to 10
-7. Output layer -> GAP is used to convert every channel to 1\*1 and then passed to softmax
+5. Block 2 -> Convolution with a kernel of size 8\*3\*3 and padding 1, we do two sets of such convolution
+6. Transition layer -> AdaptiveAvgPool2d is used to reduce the channel size from 7 to 1
+7. Output layer -> A 1\*1 Convolution is used to change 8 channels to 10 channels and then passed to softmax
 
     ```
     ----------------------------------------------------------------
@@ -149,7 +149,7 @@ This network contains a block pattern as shown. We start with an image of size 1
     ```
 
 
-As we can see from the network summary total number of params used is `4838`
+As we can see from the network summary total number of params used is `3,762`
 
 Receptive Field Calculation
 
