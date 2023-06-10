@@ -28,25 +28,37 @@ Code Link: [Local NoteBook](S6.ipynb)
 Before we can even start talking about machine learning, model, or training we need to know what kind of problem we are trying to solve here. For us, the problem at hand is classifying a digit image into its respective class (ie what digit a given image belongs to).
 
 ## Data Loader
-To start with, the first thing we have to do is to load data. As we are working with `PyTorch`, there is an inbuilt functionality that helps us load data as shown below
+To start with, the first thing we have to do is to load data. And decide on data transforms.
+
+	def get_a_train_transform():
+	    """Get transformer for training data
+
+	    Returns:
+		Compose: Composed transformations
+	    """
+	    return A.Compose([
+		A.ShiftScaleRotate(shift_limit=0.09, scale_limit=0.09, rotate_limit=7, p=0.5),
+		# A.RandomResizedCrop(height=26, width=26, scale=(0.8, 1.0), p=0.3),
+		A.RandomBrightnessContrast(p=0.5),
+		# A.GaussNoise(p=0.2),
+		# A.Equalize(p=0.2),
+		A.Normalize(mean=(0.1307,), std=(0.3081,)),
+		ToTensorV2(),
+	    ])
 
 
-    batch_size = 32
+	def get_a_test_transform():
+	    """Get transformer for test data
 
-    train_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('../data', train=True, download=True,
-                    transform=transforms.Compose([
-                        transforms.ToTensor(),
-                        transforms.Normalize((0.1307,), (0.3081,))
-                    ])),
-    batch_size=batch_size, shuffle=True)
-
-    test_loader = torch.utils.data.DataLoader(
-        datasets.MNIST('../data', train=False, transform=transforms.Compose([
-                            transforms.ToTensor(),
-                            transforms.Normalize((0.1307,), (0.3081,))
-                        ])),
-        batch_size=batch_size, shuffle=True)
+	    Returns:
+		Compose: Composed transformations
+	    """
+	    return A.Compose([
+		A.Normalize(mean=(0.1307,), std=(0.3081,)),
+		ToTensorV2(),
+	    ])
+	    
+	 
 
 
 this will load mnist data and convert it into `data loader`. DataLoader is a built-in class that provides an iterator to loop over, one of the parameters this takes in is batch size which is used for `minibatch` gradient descent while training.
